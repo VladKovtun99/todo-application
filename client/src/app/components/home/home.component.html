@@ -1,0 +1,12 @@
+@if (!this.authService.isLoggedIn()) {
+  <app-auth-options></app-auth-options>
+} @else {
+  <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 text-center">
+    <h1 class="text-success fw-bold mb-4">User is logged in!</h1>
+    <button (click)="signOut()" class="btn btn-danger px-4 py-2">
+      Sign Out
+    </button>
+  </div>
+}
+
+
