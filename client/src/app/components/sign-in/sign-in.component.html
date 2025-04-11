@@ -1,1 +1,25 @@
-<p>sign-in works!</p>
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+  <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" class="p-4 border rounded shadow bg-white" style="width: 100%; max-width: 500px;">
+    <h2 class="mb-4 text-center">Sign In</h2>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email">
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="form-label">Password</label>
+      <input id="password" type="password" formControlName="password" class="form-control" placeholder="Enter your password">
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="!signinForm.valid">
+      Submit
+    </button>
+
+    <div class="text-center">
+      <a routerLink="/" class="btn btn-outline-primary">
+        Go to Home
+      </a>
+    </div>
+  </form>
+</div>

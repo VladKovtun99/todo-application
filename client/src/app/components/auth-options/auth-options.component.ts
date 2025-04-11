@@ -9,6 +9,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
     RouterLinkActive
   ],
   templateUrl: './auth-options.component.html',
+  standalone: true,
   styleUrl: './auth-options.component.css'
 })
 export class AuthOptionsComponent {
