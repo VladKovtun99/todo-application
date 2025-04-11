@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Buy groceries",
+    "status": 1,
+    "description": "Milk, Bread, Eggs, and Vegetables"
+  },
+  {
+    "id": 2,
+    "title": "Complete Angular project",
+    "status": 2,
+    "description": "Work on the UI components and services"
+  },
+  {
+    "id": 3,
+    "title": "Read TypeScript docs",
+    "status": 3,
+    "description": "Focus on generics and advanced types"
+  },
+  {
+    "id": 4,
+    "title": "Book a dentist appointment",
+    "status": 1,
+    "description": "Call the clinic and set a date for next week"
+  },
+  {
+    "id": 5,
+    "title": "Workout session",
+    "status": 2,
+    "description": "30 minutes cardio and strength training"
+  }
+]

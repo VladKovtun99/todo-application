@@ -1,0 +1,62 @@
+
+<div class="todo-container">
+  <mat-card class="todo-card">
+    <mat-card-header>
+      <mat-card-title class="mb-3">My Todo List</mat-card-title>
+      <mat-card-subtitle class="mb-3">Manage your tasks efficiently</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (todos.length > 0) {
+        <div class="todo-list">
+          @for (todo of todos; track todo.id) {
+            <mat-expansion-panel class="todo-item">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="todo-title">
+                  <div class="status-indicator"
+                       [ngClass]="{
+                         'status-not-started': todo.status === 1,
+                         'status-in-progress': todo.status === 2,
+                         'status-completed': todo.status === 3
+                       }">
+                  </div>
+                  {{ todo.title }}
+                </mat-panel-title>
+                <mat-panel-description>
+                  <span class="status-badge"
+                        [ngClass]="{
+                         'status-not-started': todo.status === 1,
+                         'status-in-progress': todo.status === 2,
+                         'status-completed': todo.status === 3
+                       }">
+                    {{ todo.status === 1 ? 'Not started' : todo.status === 2 ? 'In Progress' : 'Completed' }}
+                  </span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <p>{{ todo.description }}</p>
+
+              <mat-action-row>
+                <button mat-button color="primary" [disabled]="todo.status === 3">Mark as Complete</button>
+                <button mat-button color="accent">Edit</button>
+                <button mat-button color="warn">Delete</button>
+              </mat-action-row>
+            </mat-expansion-panel>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <mat-icon>assignment</mat-icon>
+          <p>No todos found. Create one to get started!</p>
+        </div>
+      }
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        Add Todo
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

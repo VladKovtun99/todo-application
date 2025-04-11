@@ -1,0 +1,24 @@
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.user-status {
+  font-weight: 500;
+  color: #08a51d; /* Bright yellow */
+  display: flex;
+  align-items: center;
+}
+
+
+@media (max-width: 599px) {
+  .auth-card, .auth-options-card {
+    width: 100%;
+  }
+
+  .user-header {
+    padding: 0 16px;
+  }
+}
