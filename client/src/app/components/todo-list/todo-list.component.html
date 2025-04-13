@@ -10,34 +10,7 @@
       @if (todos.length > 0) {
         <div class="todo-list">
           @for (todo of todos; track todo.id) {
-            <mat-expansion-panel class="todo-item">
-              <mat-expansion-panel-header>
-                <mat-panel-title class="todo-title">
-                  <div class="status-indicator"
-                       [ngClass]="{
-                         'status-not-started': todo.status === 1,
-                         'status-in-progress': todo.status === 2,
-                         'status-completed': todo.status === 3
-                       }">
-                  </div>
-                  {{ todo.title }}
-                </mat-panel-title>
-                <mat-panel-description>
-                  <app-status-selector
-                    [todo]="todo"
-                    (statusChanged)="handleStatusChange($event)">
-                  </app-status-selector>
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-
-              <p>{{ todo.description }}</p>
-
-              <mat-action-row>
-                <button mat-button color="primary" [disabled]="todo.status === 3" (click)="markAsComplete(todo.id)">Mark as Complete</button>
-                <button mat-button color="accent">Edit</button>
-                <button mat-button color="warn" (click)="deleteTodo(todo.id)">Delete</button>
-              </mat-action-row>
-            </mat-expansion-panel>
+            <app-todo-card [todo]="todo"></app-todo-card>
           }
         </div>
       } @else {

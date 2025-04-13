@@ -8,8 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {TodoStateService} from '../../services/todo-state.service';
 import {MatDialog} from '@angular/material/dialog';
 import {AddTodoDialogComponent} from '../add-todo-dialog/add-todo-dialog.component';
-import {StatusesEnum} from '../../enums/StatusesEnum';
-import {StatusSelectorComponent} from '../status-selector/status-selector.component';
+import {TodoCardComponent} from '../todo-card/todo-card.component';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,7 +18,7 @@ import {StatusSelectorComponent} from '../status-selector/status-selector.compon
     MatExpansionModule,
     MatButtonModule,
     MatIconModule,
-    StatusSelectorComponent
+    TodoCardComponent
   ],
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.css'
@@ -42,23 +41,5 @@ export class TodoListComponent implements OnInit {
       disableClose: true,
       backdropClass: 'dialog-backdrop'
     });
-  }
-
-  deleteTodo(id: number): void {
-    this.todoService.deleteTodo(id)
-  }
-
-  markAsComplete(id: number): void {
-    const todo = this.todos.find(todo => todo.id == id);
-
-    if (todo) {
-      todo.status = StatusesEnum.Done;
-      this.todoService.updateTodo(todo);
-    }
-  }
-
-  handleStatusChange(event: { todo: TodoModel, newStatus: number }): void {
-    const updatedTodo = {...event.todo, status: event.newStatus};
-    this.todoService.updateTodo(updatedTodo);
   }
 }
