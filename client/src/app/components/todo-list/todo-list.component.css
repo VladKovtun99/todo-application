@@ -67,14 +67,9 @@
   margin-bottom: 16px;
 }
 
-/* Responsive styles */
 @media (max-width: 600px) {
   .todo-container {
     padding: 8px;
-  }
-
-  mat-panel-description {
-    display: none;
   }
 
   mat-action-row {
