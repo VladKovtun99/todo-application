@@ -23,23 +23,19 @@
                   {{ todo.title }}
                 </mat-panel-title>
                 <mat-panel-description>
-                  <span class="status-badge"
-                        [ngClass]="{
-                         'status-not-started': todo.status === 1,
-                         'status-in-progress': todo.status === 2,
-                         'status-completed': todo.status === 3
-                       }">
-                    {{ todo.status === 1 ? 'Not started' : todo.status === 2 ? 'In Progress' : 'Completed' }}
-                  </span>
+                  <app-status-selector
+                    [todo]="todo"
+                    (statusChanged)="handleStatusChange($event)">
+                  </app-status-selector>
                 </mat-panel-description>
               </mat-expansion-panel-header>
 
               <p>{{ todo.description }}</p>
 
               <mat-action-row>
-                <button mat-button color="primary" [disabled]="todo.status === 3">Mark as Complete</button>
+                <button mat-button color="primary" [disabled]="todo.status === 3" (click)="markAsComplete(todo.id)">Mark as Complete</button>
                 <button mat-button color="accent">Edit</button>
-                <button mat-button color="warn">Delete</button>
+                <button mat-button color="warn" (click)="deleteTodo(todo.id)">Delete</button>
               </mat-action-row>
             </mat-expansion-panel>
           }
@@ -53,7 +49,7 @@
     </mat-card-content>
 
     <mat-card-actions align="end">
-      <button mat-raised-button color="primary">
+      <button mat-raised-button color="primary" (click)="addTodo()">
         <mat-icon>add</mat-icon>
         Add Todo
       </button>

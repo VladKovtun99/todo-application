@@ -1,0 +1,28 @@
+
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-not-started {
+  background-color: #ff9800; /* Orange */
+}
+
+.status-in-progress {
+  background-color: #2196f3; /* Blue */
+}
+
+.status-completed {
+  background-color: #4caf50; /* Green */
+}

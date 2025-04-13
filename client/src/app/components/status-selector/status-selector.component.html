@@ -1,0 +1,28 @@
+<div class="d-inline-block position-relative">
+  <span class="status-badge"
+        [ngClass]="{
+         'status-not-started': todo.status === 1,
+         'status-in-progress': todo.status === 2,
+         'status-completed': todo.status === 3
+       }"
+        [matMenuTriggerFor]="statusMenu"
+        style="cursor: pointer;">
+    {{ todo.status === 1 ? 'Not started' : todo.status === 2 ? 'In Progress' : 'Completed' }}
+    <mat-icon class="align-text-bottom ms-1" style="font-size: 16px; height: 16px; width: 16px;">arrow_drop_down</mat-icon>
+  </span>
+
+  <mat-menu #statusMenu="matMenu">
+    <button mat-menu-item (click)="updateStatus(1)">
+      <span class="status-indicator status-not-started me-2"></span>
+      Not Started
+    </button>
+    <button mat-menu-item (click)="updateStatus(2)">
+      <span class="status-indicator status-in-progress me-2"></span>
+      In Progress
+    </button>
+    <button mat-menu-item (click)="updateStatus(3)">
+      <span class="status-indicator status-completed me-2"></span>
+      Completed
+    </button>
+  </mat-menu>
+</div>

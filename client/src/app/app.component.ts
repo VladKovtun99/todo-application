@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {AuthOptionsComponent} from './components/auth-options/auth-options.component';
+import {RouterOutlet} from '@angular/router';
 import { initializeApp } from "firebase/app";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AuthOptionsComponent, RouterLink],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
