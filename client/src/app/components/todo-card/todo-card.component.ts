@@ -11,6 +11,8 @@ import {MatButton} from '@angular/material/button';
 import {TodoStateService} from '../../services/todo-state.service';
 import {StatusesEnum} from '../../enums/StatusesEnum';
 import {NgClass} from '@angular/common';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {TodoDialogComponent} from '../todo-dialog/todo-dialog.component';
 
 @Component({
   selector: 'app-todo-card',
@@ -30,7 +32,7 @@ import {NgClass} from '@angular/common';
 export class TodoCardComponent {
   @Input() todo!: TodoModel;
 
-  constructor(private todoService: TodoStateService) {
+  constructor(private todoService: TodoStateService, private dialog: MatDialog) {
   }
 
   deleteTodo(id: number): void {
@@ -47,5 +49,14 @@ export class TodoCardComponent {
   handleStatusChange(event: { todo: TodoModel, newStatus: number }): void {
     const updatedTodo = {...event.todo, status: event.newStatus};
     this.todoService.updateTodo(updatedTodo);
+  }
+
+  openEditDialog(todo: TodoModel): void {
+    this.dialog.open(TodoDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      backdropClass: 'dialog-backdrop',
+      data: todo
+    });
   }
 }

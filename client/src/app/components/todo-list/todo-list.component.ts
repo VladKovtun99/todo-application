@@ -7,7 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {TodoStateService} from '../../services/todo-state.service';
 import {MatDialog} from '@angular/material/dialog';
-import {AddTodoDialogComponent} from '../add-todo-dialog/add-todo-dialog.component';
+import {TodoDialogComponent} from '../todo-dialog/todo-dialog.component';
 import {TodoCardComponent} from '../todo-card/todo-card.component';
 
 @Component({
@@ -35,11 +35,12 @@ export class TodoListComponent implements OnInit {
     });
   }
 
-  addTodo(): void {
-    this.dialog.open(AddTodoDialogComponent, {
+  openAddDialog(): void {
+    this.dialog.open(TodoDialogComponent, {
       width: '500px',
       disableClose: true,
       backdropClass: 'dialog-backdrop'
     });
   }
+
 }

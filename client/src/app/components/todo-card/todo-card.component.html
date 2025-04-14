@@ -22,7 +22,7 @@
 
   <mat-action-row>
     <button mat-button color="primary" [disabled]="todo.status === 3" (click)="markAsComplete(todo.id)">Mark as Complete</button>
-    <button mat-button color="accent">Edit</button>
+    <button mat-button color="accent" (click)="openEditDialog(todo)">Edit</button>
     <button mat-button color="warn" (click)="deleteTodo(todo.id)">Delete</button>
   </mat-action-row>
 </mat-expansion-panel>
