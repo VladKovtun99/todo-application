@@ -20,6 +20,23 @@
 
   <p>{{ todo.description }}</p>
 
+  <div class="deadline-container mt-3 mb-3">
+    <mat-icon class="align-middle text-muted">event</mat-icon>
+    <span class="deadline-label ms-2 me-2">Deadline:</span>
+    <span class="deadline-date"
+          [ngClass]="{
+                       'text-danger': isDeadlinePast(todo),
+                       'text-warning': isDeadlineNear(todo) || isDeadlineToday(todo),
+                       'text-success': todo.status === 3
+                     }">
+      {{ todo.deadline | date:'MMM dd, yyyy' }}
+    </span>
+    <span *ngIf="isDeadlinePast(todo) && todo.status !== 3" class="badge bg-danger ms-2">Overdue!</span>
+    <span *ngIf="isDeadlineToday(todo) && todo.status !== 3" class="badge bg-warning ms-2">Due today!</span>
+    <span *ngIf="isDeadlineNear(todo) && todo.status !== 3" class="badge bg-warning ms-2">Due soon!</span>
+    <span *ngIf="todo.status === 3" class="badge bg-success ms-2">Completed</span>
+  </div>
+
   <mat-action-row>
     <button mat-button color="primary" [disabled]="todo.status === 3" (click)="markAsComplete(todo.id)">Mark as Complete</button>
     <button mat-button color="accent" (click)="openEditDialog(todo)">Edit</button>

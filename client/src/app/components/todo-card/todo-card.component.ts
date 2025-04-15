@@ -10,9 +10,11 @@ import {StatusSelectorComponent} from '../status-selector/status-selector.compon
 import {MatButton} from '@angular/material/button';
 import {TodoStateService} from '../../services/todo-state.service';
 import {StatusesEnum} from '../../enums/StatusesEnum';
-import {NgClass} from '@angular/common';
+import {DatePipe, NgClass, NgIf} from '@angular/common';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {TodoDialogComponent} from '../todo-dialog/todo-dialog.component';
+import {isDeadlineNear, isDeadlinePast, isDeadlineToday} from '../../utilities/deadline-utilities';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-todo-card',
@@ -24,13 +26,19 @@ import {TodoDialogComponent} from '../todo-dialog/todo-dialog.component';
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
     StatusSelectorComponent,
-    NgClass
+    NgClass,
+    MatIcon,
+    NgIf,
+    DatePipe,
   ],
   templateUrl: './todo-card.component.html',
   styleUrl: './todo-card.component.css'
 })
 export class TodoCardComponent {
   @Input() todo!: TodoModel;
+  isDeadlineNear = isDeadlineNear;
+  isDeadlinePast = isDeadlinePast;
+  isDeadlineToday = isDeadlineToday;
 
   constructor(private todoService: TodoStateService, private dialog: MatDialog) {
   }
@@ -41,7 +49,7 @@ export class TodoCardComponent {
 
   markAsComplete(id: number): void {
     if (this.todo.status !== StatusesEnum.Done) {
-      const updatedTodo = { ...this.todo, status: StatusesEnum.Done };
+      const updatedTodo = {...this.todo, status: StatusesEnum.Done};
       this.todoService.updateTodo(updatedTodo);
     }
   }

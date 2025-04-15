@@ -33,3 +33,57 @@
 .status-completed {
   background-color: #4caf50; /* Green */
 }
+.deadline-container {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.deadline-label {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.deadline-date {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+}
+
+.text-danger {
+  color: #f44336 !important;
+}
+
+.text-warning {
+  color: #ff9800 !important;
+}
+
+.text-success {
+  color: #4caf50 !important;
+}
+
+.text-muted {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.bg-danger {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.bg-warning {
+  background-color: #ff9800 !important;
+}
+
+.bg-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
