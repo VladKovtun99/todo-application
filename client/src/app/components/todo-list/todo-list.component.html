@@ -21,7 +21,13 @@
       }
     </mat-card-content>
 
-    <mat-card-actions align="end">
+    <mat-card-actions align="end" class="m-3">
+      @if(todos.length > 0){
+        <button mat-raised-button color="primary" class="mx-3" (click)="clear()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+      }
       <button mat-raised-button color="primary" (click)="openAddDialog()">
         <mat-icon>add</mat-icon>
         Add Todo

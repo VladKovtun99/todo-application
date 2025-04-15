@@ -42,5 +42,11 @@ export class TodoStateService {
     this.todoSubject.next(updated);
     this.saveTodos(updated);
   }
+
+  clearTodos() {
+    const updated: TodoModel[] = []
+    this.todoSubject.next(updated)
+    this.saveTodos(updated);
+  }
 }
 

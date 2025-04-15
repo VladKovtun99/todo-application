@@ -43,4 +43,7 @@ export class TodoListComponent implements OnInit {
     });
   }
 
+  clear(): void {
+    this.todoService.clearTodos();
+  }
 }
