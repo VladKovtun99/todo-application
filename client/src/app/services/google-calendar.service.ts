@@ -142,7 +142,7 @@ export class GoogleCalendarService {
           dateTime: eventDetails.endTime,
           timeZone: 'Europe/Warsaw',
         },
-        recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
+        recurrence: [],
         attendees: [{ email: eventDetails.email }],
         reminders: {
           useDefault: false,

@@ -1,0 +1,19 @@
+
+.calendar-checkbox {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.03);
+  transition: background-color 0.2s ease;
+}
+
+
+.calendar-checkbox:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.calendar-icon {
+  color: #1976d2;
+}
+.calendar-hint {
+  font-size: 12px;
+  opacity: 0.7;
+}

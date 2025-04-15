@@ -28,6 +28,20 @@
         </mat-form-field>
       </div>
 
+      @if (!isEditMode) {
+        <div class="col-12">
+          <mat-checkbox formControlName="addToCalendar" color="primary" class="calendar-checkbox">
+            <div class="d-flex align-items-center">
+              <mat-icon class="calendar-icon me-2">calendar_today</mat-icon>
+              <span>Add to Google Calendar</span>
+            </div>
+          </mat-checkbox>
+          <div class="calendar-hint text-muted mt-1">
+            This will create a calendar event with reminders
+          </div>
+        </div>
+      }
+
       <div class="col-12 text-end pt-3">
         <button mat-button class="me-2" type="button" mat-dialog-close>Cancel</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="!todoForm.valid">

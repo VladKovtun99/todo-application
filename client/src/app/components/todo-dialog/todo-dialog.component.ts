@@ -8,8 +8,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {TodoStateService} from '../../services/todo-state.service';
 import {TodoModel} from '../../models/todo.model';
 import {StatusesEnum} from '../../enums/StatusesEnum';
-import { GoogleCalendarService } from '../../services/google-calendar.service';
+import {GoogleCalendarService} from '../../services/google-calendar.service';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import {ConsoleLogger} from '@angular/compiler-cli';
+import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-todo-dialog',
@@ -22,7 +24,8 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/m
     MatIconModule,
     MatDatepickerToggle,
     MatDatepickerInput,
-    MatDatepicker
+    MatDatepicker,
+    MatCheckbox
   ],
   templateUrl: './todo-dialog.component.html',
   styleUrl: './todo-dialog.component.css'
@@ -33,7 +36,8 @@ export class TodoDialogComponent {
   todoForm = new FormGroup({
     title: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    deadline: new FormControl(new Date())
+    deadline: new FormControl(new Date()),
+    addToCalendar: new FormControl(false)
   });
 
   constructor(private todoService: TodoStateService,
@@ -50,7 +54,8 @@ export class TodoDialogComponent {
       this.todoForm.setValue({
         title: this.data.title,
         description: this.data.description,
-        deadline: deadlineDate
+        deadline: deadlineDate,
+        addToCalendar: false
       });
     }
   }
@@ -82,18 +87,20 @@ export class TodoDialogComponent {
 
       this.todoService.addTodo(newTodo);
 
-      try {
-        const eventLink = await this.googleCalendarService.createEvent({
-          summary: newTodo.title,
-          description: newTodo.description,
-          email: "goze23gooz@gmail.com",
-          startTime: deadlineDate.toISOString(),
-          endTime: deadlineDate.toISOString()
-        });
+      if (this.todoForm.controls['addToCalendar'].value) {
+        try {
+          const eventLink = await this.googleCalendarService.createEvent({
+            summary: newTodo.title,
+            description: newTodo.description,
+            email: "goze23gooz@gmail.com",
+            startTime: deadlineDate.toISOString(),
+            endTime: deadlineDate.toISOString()
+          });
 
-        console.log("Event created with URL:", eventLink);
-      } catch (error) {
-        console.error("Failed to create Google Calendar event:", error);
+          console.log("Event created with URL:", eventLink);
+        } catch (error) {
+          console.error("Failed to create Google Calendar event:", error);
+        }
       }
     }
     this.dialogRef.close();
