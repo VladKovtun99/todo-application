@@ -1,4 +1,4 @@
-import {Component, Inject, Input} from '@angular/core';
+import {Component, inject, Inject, Input} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
@@ -28,6 +28,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
     MatCheckbox
   ],
   templateUrl: './todo-dialog.component.html',
+  standalone: true,
   styleUrl: './todo-dialog.component.css'
 })
 export class TodoDialogComponent {
@@ -39,12 +40,11 @@ export class TodoDialogComponent {
     deadline: new FormControl(new Date()),
     addToCalendar: new FormControl(false)
   });
+  todoService = inject(TodoStateService);
+  googleCalendarService = inject(GoogleCalendarService);
+  dialogRef =  inject(MatDialogRef<TodoDialogComponent>);
 
-  constructor(private todoService: TodoStateService,
-              private dialogRef: MatDialogRef<TodoDialogComponent>,
-              private googleCalendarService: GoogleCalendarService,
-              @Inject(MAT_DIALOG_DATA) public data: TodoModel | null
-  ) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: TodoModel | null) {
     this.isEditMode = !!data;
     this.dialogTitle = this.isEditMode ? 'Edit Todo' : 'Add Todo';
 

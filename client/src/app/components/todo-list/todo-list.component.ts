@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {TodoModel} from '../../models/todo.model';
 import {CommonModule} from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
@@ -21,12 +21,14 @@ import {TodoCardComponent} from '../todo-card/todo-card.component';
     TodoCardComponent
   ],
   templateUrl: './todo-list.component.html',
+  standalone: true,
   styleUrl: './todo-list.component.css'
 })
 export class TodoListComponent implements OnInit {
   todos: TodoModel[] = [];
+  todoService = inject(TodoStateService)
 
-  constructor(private todoService: TodoStateService, private dialog: MatDialog) {
+  constructor(private dialog: MatDialog) {
   }
 
   ngOnInit(): void {

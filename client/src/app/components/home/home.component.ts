@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {AuthTemporaryService} from '../../services/auth-temporary.service';
 import {MatToolbar, MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -18,6 +18,5 @@ import {HeaderComponent} from '../header/header.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(protected authService: AuthTemporaryService) {
-  }
+  authService = inject(AuthTemporaryService);
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {AuthTemporaryService} from '../../services/auth-temporary.service';
@@ -8,11 +8,11 @@ import {AuthTemporaryService} from '../../services/auth-temporary.service';
   imports: [MatToolbarModule,
     MatButtonModule,],
   templateUrl: './header.component.html',
+  standalone: true,
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  constructor(protected authService: AuthTemporaryService) {
-  }
+  authService = inject(AuthTemporaryService);
 
   signOut(): void {
     this.authService.removeAuth();

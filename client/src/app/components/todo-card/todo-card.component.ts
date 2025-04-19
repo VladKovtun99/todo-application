@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {TodoModel} from '../../models/todo.model';
 import {
   MatExpansionPanel,
@@ -17,31 +17,31 @@ import {isDeadlineNear, isDeadlinePast, isDeadlineToday} from '../../utilities/d
 import {MatIcon} from '@angular/material/icon';
 
 @Component({
-  selector: 'app-todo-card',
-  imports: [
-    MatButton,
-    MatExpansionPanel,
-    MatExpansionPanelActionRow,
-    MatExpansionPanelDescription,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    StatusSelectorComponent,
-    NgClass,
-    MatIcon,
-    NgIf,
-    DatePipe,
-  ],
-  templateUrl: './todo-card.component.html',
-  styleUrl: './todo-card.component.css'
+    selector: 'app-todo-card',
+    imports: [
+        MatButton,
+        MatExpansionPanel,
+        MatExpansionPanelActionRow,
+        MatExpansionPanelDescription,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        StatusSelectorComponent,
+        NgClass,
+        MatIcon,
+        NgIf,
+        DatePipe,
+    ],
+    templateUrl: './todo-card.component.html',
+    standalone: true,
+    styleUrl: './todo-card.component.css'
 })
 export class TodoCardComponent {
   @Input() todo!: TodoModel;
   isDeadlineNear = isDeadlineNear;
   isDeadlinePast = isDeadlinePast;
   isDeadlineToday = isDeadlineToday;
-
-  constructor(private todoService: TodoStateService, private dialog: MatDialog) {
-  }
+  dialog = inject(MatDialog);
+  todoService = inject(TodoStateService)
 
   deleteTodo(id: number): void {
     this.todoService.deleteTodo(id)

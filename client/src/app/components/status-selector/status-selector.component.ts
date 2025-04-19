@@ -5,12 +5,13 @@ import {MatMenuModule} from '@angular/material/menu';
 import {TodoModel} from '../../models/todo.model';
 
 @Component({
-  selector: 'app-status-selector',
-  imports: [MatMenuModule,
-    MatIconModule,
-    NgClass],
-  templateUrl: './status-selector.component.html',
-  styleUrl: './status-selector.component.css'
+    selector: 'app-status-selector',
+    imports: [MatMenuModule,
+        MatIconModule,
+        NgClass],
+    templateUrl: './status-selector.component.html',
+    standalone: true,
+    styleUrl: './status-selector.component.css'
 })
 export class StatusSelectorComponent {
   @Input() todo!: TodoModel;

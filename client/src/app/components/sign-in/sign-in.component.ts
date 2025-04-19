@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {AuthTemporaryService} from '../../services/auth-temporary.service';
@@ -18,9 +18,7 @@ export class SignInComponent {
     email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   })
-
-  constructor(private authService: AuthTemporaryService) {
-  }
+  authService = inject(AuthTemporaryService);
 
   onSubmit(): void {
     this.authService.setAuth();
