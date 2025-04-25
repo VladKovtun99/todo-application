@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from todolist.users.models import User
-
+from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):

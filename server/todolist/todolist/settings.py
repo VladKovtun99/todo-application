@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qbo2^avt*s-ge^4(b+k%1e8+7*7lv)n6hq=-yg$m#lmi&x$=gq'
+SECRET_KEY = 'django-insecure-euxc4xvvjb9bl9qza%2i**teh^(o7ji!ffeooyf9o6+5$gg_5h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'users',
+    'todos',
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,17 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+
+        'NAME': 'todo_db',
+
+        'USER': 'postgres',
+
+        'PASSWORD': 'postgres',
+
+        'HOST': 'localhost',
+
+        'PORT': '5432',
     }
 }
 
