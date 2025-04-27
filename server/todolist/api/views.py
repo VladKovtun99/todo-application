@@ -4,8 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .serializer import UserRegistrationSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -61,3 +60,6 @@ def login(request):
 
     return Response(tokens, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def test(request):
+    return Response('Ok.', status=status.HTTP_200_OK)
