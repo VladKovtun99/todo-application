@@ -2,23 +2,41 @@
   <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="p-4 border rounded shadow bg-white" style="width: 100%; max-width: 500px;">
     <h2 class="mb-4 text-center">Sign Up</h2>
 
+    <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+      {{ errorMessage }}
+    </div>
+
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
-      <input id="name" type="text" formControlName="name" class="form-control" placeholder="Enter your name">
+      <input id="name" type="text" formControlName="name" class="form-control" placeholder="Enter your name"
+             [ngClass]="{'is-invalid': submitted && formControls['name'].errors}">
+      <div *ngIf="submitted && formControls['name'].errors" class="invalid-feedback">
+        <div *ngIf="formControls['name'].errors['required']">Name is required</div>
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email">
+      <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email"
+             [ngClass]="{'is-invalid': submitted && formControls['email'].errors}">
+      <div *ngIf="submitted && formControls['email'].errors" class="invalid-feedback">
+        <div *ngIf="formControls['email'].errors['required']">Email is required</div>
+        <div *ngIf="formControls['email'].errors['email']">Please enter a valid email address</div>
+      </div>
     </div>
 
     <div class="mb-4">
       <label for="password" class="form-label">Password</label>
-      <input id="password" type="password" formControlName="password" class="form-control" placeholder="Enter your password">
+      <input id="password" type="password" formControlName="password" class="form-control" placeholder="Enter your password"
+             [ngClass]="{'is-invalid': submitted && formControls['password'].errors}">
+      <div *ngIf="submitted && formControls['password'].errors" class="invalid-feedback">
+        <div *ngIf="formControls['password'].errors['required']">Password is required</div>
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="!signupForm.valid">
-      Submit
+    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      {{ isSubmitting ? 'Submitting...' : 'Submit' }}
     </button>
 
     <div class="text-center">

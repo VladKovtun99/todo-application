@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
-import {AuthTemporaryService} from '../../services/auth-temporary.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,9 +12,9 @@ import {AuthTemporaryService} from '../../services/auth-temporary.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  authService = inject(AuthTemporaryService);
+  authService = inject(AuthService);
 
   signOut(): void {
-    this.authService.removeAuth();
+    this.authService.logout();
   }
 }

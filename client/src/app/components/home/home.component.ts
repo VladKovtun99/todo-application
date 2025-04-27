@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {AuthTemporaryService} from '../../services/auth-temporary.service';
+import {AuthService} from '../../services/auth.service';
 import {MatToolbar, MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {AuthOptionsComponent} from '../auth-options/auth-options.component';
@@ -18,5 +18,12 @@ import {HeaderComponent} from '../header/header.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  authService = inject(AuthTemporaryService);
+  authService = inject(AuthService);
+  isLoggedIn = false;
+
+  ngOnInit() {
+    this.authService.isAuthenticated.subscribe(isAuthenticated => {
+      this.isLoggedIn = isAuthenticated;
+    });
+  }
 }

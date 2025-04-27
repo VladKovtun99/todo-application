@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {AuthTemporaryService} from '../../services/auth-temporary.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -18,10 +18,10 @@ export class SignInComponent {
     email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   })
-  authService = inject(AuthTemporaryService);
+  authService = inject(AuthService);
 
   onSubmit(): void {
-    this.authService.setAuth();
+
     this.signinForm.reset();
   }
 }

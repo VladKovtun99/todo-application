@@ -9,7 +9,7 @@ import { LoggedInUserDto } from '../models/logged-in-user.dto';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthTemporaryService {
+export class AuthService {
   http = inject(HttpClient);
 
   private currentUserSubject = new BehaviorSubject<LoggedInUserDto | null>(null);

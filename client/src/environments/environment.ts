@@ -5,5 +5,6 @@ export const environment = {
     apiKey: 'AIzaSyDAbtbS7c_OCfJ4x6835T1n5BPRnfQCfKU',
     discoveryDoc: 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
     scopes: 'https://www.googleapis.com/auth/calendar'
-  }
+  },
+  apiUrl: 'http://localhost:8000/api',
 };
