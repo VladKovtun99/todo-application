@@ -1,7 +1,6 @@
-
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from rest_framework import serializers
-
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
@@ -25,6 +24,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         email = validated_data.get('email')
         password = validated_data.get('password')
 
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({'error': 'User with this email already exists!'})
+
         user = User.objects.create_user(
             username=email,
             email=email,
@@ -33,4 +35,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
 
         
+        return user
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, validated_data):
+        email = validated_data.get('email')
+        password = validated_data.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'error':'User with email does not exist!'})
+
+        if not user.check_password(password):
+            raise serializers.ValidationError({'error':'Invalid credentials!'})
+
         return user

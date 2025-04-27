@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
-from .serializer import UserRegistrationSerializer
+from .serializer import UserRegistrationSerializer, UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 
@@ -25,10 +25,6 @@ def register(request):
     serializer = UserRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
-        email = request.data.get('email')
-
-        if User.objects.filter(email=email).exists():
-            return Response({'error': 'User with this email already exists!'}, status=status.HTTP_401_UNAUTHORIZED)
 
         user = serializer.save()
 
@@ -43,22 +39,15 @@ def register(request):
 
 @api_view(['POST'])
 def login(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
 
-    try:
-        user = User.objects.get(email=email)
+    serializer = UserLoginSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        tokens = get_tokens_for_user(user)
 
-        if not check_password(password, user.password):
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(tokens, status=status.HTTP_200_OK)
 
-    except User.DoesNotExist:
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-    tokens = get_tokens_for_user(user)
-
-    return Response(tokens, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 def test(request):
