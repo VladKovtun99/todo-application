@@ -1,11 +1,11 @@
-from django.core.serializers import serialize
+
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status, viewsets
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .serializer import UserRegistrationSerializer, UserLoginSerializer, TodoSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from todos.models import Todo
 
 
@@ -17,9 +17,6 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
-
-# https://www.youtube.com/watch?v=BMym71Dwox0&ab_channel=BugBytes
-# Video about Serializers (good to watch)
 
 @api_view(['POST'])
 def register(request):
@@ -41,46 +38,27 @@ def login(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_all_todos(request):
-    todos = Todo.objects.filter(user=request.user)
-    serializer = TodoSerializer(todos, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TodoViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TodoSerializer
+    queryset = Todo.objects.all()
+
+    def get_queryset(self):
+        return Todo.objects.filter(user=self.request.user.id)
+
+    def destroy (self, request, *args, **kwargs):
+        todo_id = kwargs.get('pk')
+        if todo_id is not None:
+            todo_to_delete = get_object_or_404(Todo, id=todo_id, user=self.request.user)
+            todo_to_delete.delete()
+            return Response({'Success':'Todo was successfully deleted!'})
+
+    @action(detail=False, methods=['delete'], url_path='delete-all')
+    def delete_all(self, request):
+        todos = Todo.objects.filter(user=self.request.user.id)
+        count = todos.count()
+        todos.delete()
+        return Response({'Success':f'{count} objects were successfully deleted.'}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_todo(request):
-    serializer = TodoSerializer(data = request.data, context={'request':request})
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def change_todo_by_id(request):
-    todo_id = request.data.get('id')
-    todo_to_change = get_object_or_404(Todo, id=todo_id)
-    serializer = TodoSerializer(todo_to_change, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_todo_by_id(request):
-    todo_id = request.data.get('id')
-    todo_to_delete = get_object_or_404(Todo, id=todo_id)
-    todo_to_delete.delete()
-    return Response({'Success':'Todo was successfully deleted.'})
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_all_todos(request):
-    all_todos = Todo.objects.filter(user=request.user.id)
-    all_todos.delete()
-    return Response({'Success':'All todos were successfully deleted.'})

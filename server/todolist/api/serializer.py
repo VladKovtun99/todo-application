@@ -67,24 +67,15 @@ class TodoSerializer(serializers.ModelSerializer):
         model = Todo
         fields = ('id','title', 'status', 'deadline', 'description')
 
+    def validate_status(self, value):
+        if value not in statuses:
+            raise serializers.ValidationError({'error': 'Invalid status value.'})
+        return value
+
     def create(self, validated_data):
         request = self.context.get('request')
+        validated_data['user'] = request.user
+        return super().create(validated_data)
 
-        title = validated_data.get('title')
-        status = validated_data.get('status')
-        deadline = validated_data.get('deadline')
-        description = validated_data.get('description')
-        user = request.user
-
-        if status not in statuses:
-            raise serializers.ValidationError({'error':'Invalid status value.'})
-
-        todo = Todo.objects.create(
-            title = title,
-            status = status,
-            deadline = deadline,
-            description = description,
-            user = user
-        )
-
-        return todo
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
