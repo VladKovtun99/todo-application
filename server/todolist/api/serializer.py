@@ -1,6 +1,7 @@
-from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
+from django.template.defaultfilters import title
 from rest_framework import serializers
+from todos.models import Todo
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
@@ -54,4 +55,36 @@ class UserLoginSerializer(serializers.Serializer):
         if not user.check_password(password):
             raise serializers.ValidationError({'error':'Invalid credentials!'})
 
-        return user
+        return {
+            'user': user
+        }
+
+
+statuses = ['Not Ready', 'In Progress', 'Done']
+class TodoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Todo
+        fields = ('id','title', 'status', 'deadline', 'description')
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+
+        title = validated_data.get('title')
+        status = validated_data.get('status')
+        deadline = validated_data.get('deadline')
+        description = validated_data.get('description')
+        user = request.user
+
+        if status not in statuses:
+            raise serializers.ValidationError({'error':'Invalid status value.'})
+
+        todo = Todo.objects.create(
+            title = title,
+            status = status,
+            deadline = deadline,
+            description = description,
+            user = user
+        )
+
+        return todo
