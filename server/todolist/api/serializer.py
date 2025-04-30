@@ -60,7 +60,8 @@ class UserLoginSerializer(serializers.Serializer):
         }
 
 
-statuses = ['Not Ready', 'In Progress', 'Done']
+# statuses are supposed to be without space
+statuses = ['NotReady', 'InProgress', 'Done']
 class TodoSerializer(serializers.ModelSerializer):
 
     class Meta:
