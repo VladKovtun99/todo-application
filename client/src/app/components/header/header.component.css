@@ -7,7 +7,6 @@
 
 .user-status {
   font-weight: 500;
-  color: #08a51d; /* Bright yellow */
   display: flex;
   align-items: center;
 }

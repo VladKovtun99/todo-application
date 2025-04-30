@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { LoggedInUserDto } from '../models/logged-in-user.dto';
+import {LoginDto} from '../models/login.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,28 @@ export class AuthService {
   register(registerDto: RegisterDto): Observable<any> {
     console.log(JSON.stringify(registerDto));
     return this.http.post<any>(environment.apiUrl + '/register/', registerDto, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(
+      tap(response => {
+        if (response.access) {
+          localStorage.setItem('accessToken', response.access);
+          if (response.refresh) {
+            localStorage.setItem('refreshToken', response.refresh);
+          }
+
+          const decodedToken = jwtDecode<LoggedInUserDto>(response.access);
+          this.currentUserSubject.next(decodedToken);
+          this.isAuthenticated$.next(true);
+        }
+      })
+    );
+  }
+
+  login(loginDto: LoginDto): Observable<any> {
+    console.log(JSON.stringify(loginDto));
+    return this.http.post<any>(environment.apiUrl + '/login/', loginDto, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })

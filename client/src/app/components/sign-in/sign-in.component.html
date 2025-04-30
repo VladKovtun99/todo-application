@@ -2,6 +2,10 @@
   <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" class="p-4 border rounded shadow bg-white" style="width: 100%; max-width: 500px;">
     <h2 class="mb-4 text-center">Sign In</h2>
 
+    <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+      {{ errorMessage }}
+    </div>
+
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
       <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email">
