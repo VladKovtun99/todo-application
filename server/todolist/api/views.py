@@ -42,10 +42,9 @@ def login(request):
 class TodoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = TodoSerializer
-    queryset = Todo.objects.all()
 
     def get_queryset(self):
-        return Todo.objects.filter(user=self.request.user.id)
+        return Todo.objects.filter(user=self.request.user.id).order_by('id')
 
     def destroy (self, request, *args, **kwargs):
         todo_id = kwargs.get('pk')
@@ -54,9 +53,9 @@ class TodoViewSet(viewsets.ModelViewSet):
             todo_to_delete.delete()
             return Response({'Success':'Todo was successfully deleted!'})
 
-    @action(detail=False, methods=['delete'], url_path='delete-all')
-    def delete_all(self, request):
-        todos = Todo.objects.filter(user=self.request.user.id)
+    @action(detail=False, methods=['delete'])
+    def delete(self, request):
+        todos = self.get_queryset()
         count = todos.count()
         todos.delete()
         return Response({'Success':f'{count} objects were successfully deleted.'}, status=status.HTTP_200_OK)
