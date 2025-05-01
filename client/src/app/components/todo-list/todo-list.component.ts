@@ -35,7 +35,9 @@ export class TodoListComponent implements OnInit {
     this.todoService.loadTodosIfEmpty();
     this.todoService.todos$.subscribe(todos => {
       this.todos = todos;
+      console.log(JSON.stringify(todos));
     });
+
   }
 
   openAddDialog(): void {

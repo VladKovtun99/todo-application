@@ -36,7 +36,7 @@ export class TodoStateService {
   }
 
   updateTodo(updatedTodo: TodoModel): void {
-    this.http.put<TodoModel>(this.todosUrl, updatedTodo).subscribe(res => {
+    this.http.put<TodoModel>(`${this.todosUrl}${updatedTodo.id}/`, updatedTodo).subscribe(res => {
       const updated = this.todoSubject.value.map(todo =>
         todo.id === updatedTodo.id ? res : todo
       );
@@ -45,10 +45,15 @@ export class TodoStateService {
   }
 
   clearTodos() {
-    this.http.delete<TodoModel[]>(`${this.todosUrl}delete-all/`).subscribe(res => {
+    this.http.delete<TodoModel[]>(`${this.todosUrl}`).subscribe(res => {
       const updated: TodoModel[] = []
       this.todoSubject.next(updated)
     })
+  }
+
+  clearSubject() {
+    const updated: TodoModel[] = []
+    this.todoSubject.next(updated)
   }
 }
 

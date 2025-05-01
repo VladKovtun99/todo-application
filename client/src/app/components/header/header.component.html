@@ -1,4 +1,7 @@
 <mat-toolbar color="primary" class="user-header mb-5">
-  <span class="user-status">Hello, {{authService.getCurrentUser()?.name}}</span>
+  <div class="user-info">
+    <span class="user-status">Hello, {{ authService.getCurrentUser()?.name }}</span>
+    <span class="user-email">{{ authService.getCurrentUser()?.email }}</span>
+  </div>
   <button mat-button color="warn" (click)="signOut()">Sign Out</button>
 </mat-toolbar>
