@@ -32,6 +32,7 @@ export class TodoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.todoService.loadTodosIfEmpty();
     this.todoService.todos$.subscribe(todos => {
       this.todos = todos;
     });

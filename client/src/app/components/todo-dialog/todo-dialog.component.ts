@@ -67,7 +67,7 @@ export class TodoDialogComponent {
 
     const deadlineDate: Date = this.todoForm.controls['deadline'].value as Date;
     if (this.isEditMode && this.data) {
-      const updatedTodo: TodoModel = {
+      const updatedTodo = {
         id: this.data.id,
         title: this.todoForm.controls['title'].value || '',
         description: this.todoForm.controls['description'].value || '',
@@ -78,13 +78,12 @@ export class TodoDialogComponent {
       this.todoService.updateTodo(updatedTodo);
     } else {
       const newTodo: TodoModel = {
-        id: Math.random(),
+        id: null,
         title: this.todoForm.controls['title'].value || '',
         description: this.todoForm.controls['description'].value || '',
         status: StatusesEnum.NotStarted,
         deadline: deadlineDate
       };
-
       this.todoService.addTodo(newTodo);
 
       if (this.todoForm.controls['addToCalendar'].value) {

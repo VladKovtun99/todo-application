@@ -50,6 +50,5 @@ export class SignInComponent {
         }
       }
     )
-    this.signinForm.reset();
   }
 }
