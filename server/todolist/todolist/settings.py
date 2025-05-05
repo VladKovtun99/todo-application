@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-euxc4xvvjb9bl9qza%2i**teh^(o7ji!ffeooyf9o6+5$gg_5h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'https://todo-application-t0kh.onrender.com']
 
 
 # Application definition
@@ -117,6 +117,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
