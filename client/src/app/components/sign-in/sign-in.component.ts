@@ -24,8 +24,12 @@ export class SignInComponent {
   authService = inject(AuthService);
   router = inject(Router);
   errorMessage: string | null = null;
+  submitted = false;
+  isSubmitting = false;
 
   onSubmit(): void {
+    this.submitted = true;
+    this.isSubmitting = true;
     const loginDto: LoginDto = {
       email: this.signinForm.value.email || '',
       password: this.signinForm.value.password || ''
@@ -33,6 +37,7 @@ export class SignInComponent {
 
     this.authService.login(loginDto).subscribe({
         next: (response) => {
+          this.isSubmitting = false;
           if (response.access && response.refresh) {
             localStorage.setItem('accessToken', response.access);
 
@@ -40,6 +45,7 @@ export class SignInComponent {
           }
         },
         error: (error) => {
+          this.isSubmitting = false;
           if (error.error['error']) {
             console.log(error.error['error']);
             this.errorMessage = error.error['error'];

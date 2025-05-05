@@ -16,8 +16,9 @@
       <input id="password" type="password" formControlName="password" class="form-control" placeholder="Enter your password">
     </div>
 
-    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="!signinForm.valid">
-      Submit
+    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      {{ isSubmitting ? 'Submitting...' : 'Submit' }}
     </button>
 
     <div class="text-center">
