@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.template.defaultfilters import title
 from rest_framework import serializers
 from todos.models import Todo
 
@@ -19,14 +18,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'id': {'read_only': True}
         }
 
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with this email already exists!")
+        return value
 
     def create(self, validated_data):
         first_name = validated_data.get('first_name')
         email = validated_data.get('email')
         password = validated_data.get('password')
 
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({'error': 'User with this email already exists!'})
 
         user = User.objects.create_user(
             username=email,
