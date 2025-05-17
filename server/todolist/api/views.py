@@ -68,11 +68,16 @@ def send_email_confirmation(user_email, is_confirmation):
 def register(request):
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
-        PendingUser.objects.create(
-            email = serializer.validated_data['email'],
-            password = serializer.validated_data['password'],
-            first_name = serializer.validated_data['first_name']
-        )
+
+        try:
+            PendingUser.objects.create(
+                email = serializer.validated_data['email'],
+                password = serializer.validated_data['password'],
+                first_name = serializer.validated_data['first_name']
+            )
+        except IntegrityError:
+            return Response({'error': 'Pending user with this email already exist. Check your email.'}, status=status.HTTP_400_BAD_REQUEST)
+
         send_email_confirmation(serializer.validated_data['email'], True)
         return Response({'message':'Check your email for verification.'}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -106,17 +111,13 @@ def verify_email(request):
         if serializer.is_valid():
             serializer.save()
             pending_user.delete()
-
             redirect_url = f"https://todoappclient.web.app/sign-in"
-
             return redirect(redirect_url)
         return Response({'error': 'Data has not surpassed validation (serializer).'}, status=status.HTTP_400_BAD_REQUEST)
     except jwt.ExpiredSignatureError:
         return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
     except PendingUser.DoesNotExist:
         return Response({'error': 'Pending user does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
-    except IntegrityError:
-        return Response({'error':'Pending user with this email already exist. Check your email.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
