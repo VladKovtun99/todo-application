@@ -1,0 +1,42 @@
+.content-container {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.todo-list-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.calendar-container {
+  width: 350px;
+}
+
+.blurred {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.auth-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+  }
+
+  .calendar-container {
+    width: 100%;
+    margin-top: 20px;
+  }
+}
