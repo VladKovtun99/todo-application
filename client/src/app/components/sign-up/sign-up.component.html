@@ -6,6 +6,10 @@
       {{ errorMessage }}
     </div>
 
+    <div *ngIf="successMessage" class="alert alert-success mb-3">
+      {{ successMessage }}
+    </div>
+
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
       <input id="name" type="text" formControlName="name" class="form-control" placeholder="Enter your name"
@@ -34,12 +38,13 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isSubmitting">
+    <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isSubmitting || !!successMessage">
       <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
       {{ isSubmitting ? 'Submitting...' : 'Submit' }}
     </button>
 
-    <div class="text-center">
+    <div class="text-center mt-3">
+      <p *ngIf="successMessage">Already have an account? <a routerLink="/sign-in" class="text-primary">Sign in here</a></p>
       <a routerLink="/" class="btn btn-outline-primary">
         Go to Home
       </a>
