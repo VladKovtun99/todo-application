@@ -22,6 +22,7 @@ export class SignUpComponent {
   router = inject(Router);
 
   errorMessage: string | null = null;
+  successMessage: string | null = null;
   submitted = false;
   isSubmitting = false;
 
@@ -32,6 +33,7 @@ export class SignUpComponent {
   onSubmit(): void {
     this.submitted = true;
     this.errorMessage = null;
+    this.successMessage = null;
     if (this.signupForm.invalid) {
       return;
     }
@@ -45,10 +47,8 @@ export class SignUpComponent {
     this.authService.register(registerDto).subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        if (response.access && response.refresh) {
-          localStorage.setItem('accessToken', response.access);
-
-          this.router.navigate(['/']);
+        if (response.message) {
+          this.successMessage = response.message;
         }
       },
       error: (error) => {

@@ -52,20 +52,7 @@ export class AuthService {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
-    }).pipe(
-      tap(response => {
-        if (response.access) {
-          localStorage.setItem('accessToken', response.access);
-          if (response.refresh) {
-            localStorage.setItem('refreshToken', response.refresh);
-          }
-
-          const decodedToken = jwtDecode<LoggedInUserDto>(response.access);
-          this.currentUserSubject.next(decodedToken);
-          this.isAuthenticated$.next(true);
-        }
-      })
-    );
+    });
   }
 
   login(loginDto: LoginDto): Observable<any> {
@@ -95,6 +82,23 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     this.currentUserSubject.next(null);
     this.isAuthenticated$.next(false);
+  }
+
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${environment.apiUrl}/reset-password-request/`,
+      { email }
+    );
+  }
+
+  resetPassword(token: string, password: string): Observable<{ success: string }> {
+    return this.http.post<{ success: string }>(
+      `${environment.apiUrl}/reset-password/`,
+      { password },
+      {
+        params: { token }
+      }
+    );
   }
 
   getCurrentUser(): LoggedInUserDto | null {

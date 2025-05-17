@@ -9,6 +9,7 @@ import {TodoStateService} from '../../services/todo-state.service';
 import {MatDialog} from '@angular/material/dialog';
 import {TodoDialogComponent} from '../todo-dialog/todo-dialog.component';
 import {TodoCardComponent} from '../todo-card/todo-card.component';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -26,12 +27,17 @@ import {TodoCardComponent} from '../todo-card/todo-card.component';
 })
 export class TodoListComponent implements OnInit {
   todos: TodoModel[] = [];
-  todoService = inject(TodoStateService)
+  todoService = inject(TodoStateService);
+  authService = inject(AuthService);
 
   constructor(private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      return;
+    }
+
     this.todoService.loadTodosIfEmpty();
     this.todoService.todos$.subscribe(todos => {
       this.todos = todos;
