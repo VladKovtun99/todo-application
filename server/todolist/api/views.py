@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404, redirect
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from sqlalchemy.exc import IntegrityError
+
 from .serializer import UserRegistrationSerializer, UserLoginSerializer, TodoSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, action
@@ -113,6 +115,8 @@ def verify_email(request):
         return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
     except PendingUser.DoesNotExist:
         return Response({'error': 'Pending user does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+    except IntegrityError:
+        return Response({'error':'Pending user with this email already exist. Check your email.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
