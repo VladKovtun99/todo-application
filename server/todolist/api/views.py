@@ -116,14 +116,21 @@ def verify_email(request):
     except jwt.ExpiredSignatureError:
         return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
     except PendingUser.DoesNotExist:
-        return Response({'error': 'Pending user does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Pending user does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
 def reset_password_request(request):
     email = request.data.get('email')
-    send_email_confirmation(email, False)
-    return Response({'message':'Check your email to reset password.'}, status=status.HTTP_200_OK)
+    try:
+        User.objects.get(email=email)
+        send_email_confirmation(email, False)
+        return Response({'message': 'Check your email to reset password.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'error': 'User with email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
 
 @api_view(['POST'])
 def reset_password(request):
