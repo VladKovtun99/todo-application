@@ -49,8 +49,7 @@ def send_email_confirmation(user_email, is_confirmation):
         confirmation_link = f'http://localhost:8000/api/verify-email/?token={token}'
         msg.set_content(f"Use this link to confirm your email: {confirmation_link}")
     elif not is_confirmation:
-        #confirmation_link = f'http://todoappclient.web.app/reset-password/?token={token}'
-        confirmation_link = f'http://localhost:4200/reset-password/?token={token}'
+        confirmation_link = f'http://todoappclient.web.app/reset-password/?token={token}'
         msg.set_content(f"Use this link to reset your password: {confirmation_link}")
 
     try:
@@ -106,8 +105,7 @@ def verify_email(request):
             serializer.save()
             pending_user.delete()
 
-            #redirect_url = f"https://todoappclient.web.app/sign-in"
-            redirect_url = f"http://localhost:4200/sign-in"
+            redirect_url = f"https://todoappclient.web.app/sign-in"
 
             return redirect(redirect_url)
         return Response({'error': 'Data has not surpassed validation (serializer).'}, status=status.HTTP_400_BAD_REQUEST)
