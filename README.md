@@ -23,7 +23,7 @@ This Todo Application is a comprehensive task management system that allows user
 ## 🛠️ Tech Stack
 
 ### Backend
-- Python 3.x 🐍
+- Python 3.13 🐍
 - Django & Django REST Framework 🎯
 - PostgreSQL 🐘
 - JWT Authentication 🔑
