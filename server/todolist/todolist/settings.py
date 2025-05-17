@@ -102,25 +102,33 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-
-        'NAME': 'todo_db',
-
-        'USER': 'postgres',
-
-        'PASSWORD': 'postgres',
-
-        'HOST': 'localhost',
-
-        'PORT': '5432',
-    }
-}
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+
 if DATABASE_URL:
-    DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+
+            'NAME': 'todo_db',
+
+            'USER': 'postgres',
+
+            'PASSWORD': 'postgres',
+
+            'HOST': 'localhost',
+
+            'PORT': '5432',
+        }
+    }
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

@@ -44,7 +44,7 @@ def send_email_confirmation(user_email, is_confirmation):
     msg['To'] = user_email
 
     if is_confirmation:
-        confirmation_link = f'http://localhost:8000/api/verify-email/?token={token}'
+        confirmation_link = f'https://todo-application-t0kh.onrender.com/api/verify-email/?token={token}'
         msg['Subject'] = 'Email Confirmation'
         msg.set_content(f"Use this link to confirm your email: {confirmation_link}")
     elif not is_confirmation:
