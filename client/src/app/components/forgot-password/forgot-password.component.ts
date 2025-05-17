@@ -26,7 +26,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class ForgotPasswordComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
 
   forgotPasswordForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
