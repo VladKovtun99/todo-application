@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from email.message import EmailMessage
 import jwt
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect
 from rest_framework import status, viewsets
@@ -14,7 +13,7 @@ from todos.models import Todo
 import smtplib
 from todolist import settings
 from users.models import PendingUser
-
+import os
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -34,22 +33,23 @@ def get_email_confirmation_token(user_email):
     return token
 
 
-email_todo = 'todolistproject.email@gmail.com'
-password_todo = 'dnws qnxh pcvr uinc'
+email_todo = os.getenv('EMAIL_TODO')
+password_todo = os.getenv('PASSWORD_TODO')
 
 def send_email_confirmation(user_email, is_confirmation):
     token = get_email_confirmation_token(user_email)
 
     msg = EmailMessage()
-    msg['Subject'] = 'Email Confirmation'
     msg['From'] = email_todo
     msg['To'] = user_email
 
     if is_confirmation:
         confirmation_link = f'http://localhost:8000/api/verify-email/?token={token}'
+        msg['Subject'] = 'Email Confirmation'
         msg.set_content(f"Use this link to confirm your email: {confirmation_link}")
     elif not is_confirmation:
         confirmation_link = f'http://todoappclient.web.app/reset-password/?token={token}'
+        msg['Subject'] = 'Password Reset'
         msg.set_content(f"Use this link to reset your password: {confirmation_link}")
 
     try:
