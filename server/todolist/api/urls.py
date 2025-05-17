@@ -10,6 +10,8 @@ router.register(r'todos', TodoViewSet, basename='todo')
 urlpatterns = [
     path('register/', views.register),
     path('login/', views.login),
-    path('verify-email/', views.registration_email_confirm),
+    path('verify-email/', views.verify_email),
+    path('reset-password-request/', views.reset_password_request),
+    path('reset-password/', views.reset_password),
     path('', include(router.urls))
 ]

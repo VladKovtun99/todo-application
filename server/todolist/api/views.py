@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 from email.message import EmailMessage
 import jwt
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -35,15 +37,20 @@ def get_email_confirmation_token(user_email):
 email_todo = 'todolistproject.email@gmail.com'
 password_todo = 'dnws qnxh pcvr uinc'
 
-def send_email_confirmation(user_email):
+def send_email_confirmation(user_email, is_confirmation):
     token = get_email_confirmation_token(user_email)
-    confirmation_link = f'http://localhost:8000/api/verify-email/?token={token}'
 
     msg = EmailMessage()
     msg['Subject'] = 'Email Confirmation'
     msg['From'] = email_todo
     msg['To'] = user_email
-    msg.set_content(f"Use this link to confirm your email: {confirmation_link}")
+
+    if is_confirmation:
+        confirmation_link = f'http://localhost:8000/api/verify-email/?token={token}'
+        msg.set_content(f"Use this link to confirm your email: {confirmation_link}")
+    elif not is_confirmation:
+        confirmation_link = f'http://todoappclient.web.app/reset-password/?token={token}'
+        msg.set_content(f"Use this link to reset your password: {confirmation_link}")
 
     try:
         with smtplib.SMTP('smtp.gmail.com', 587) as connection:
@@ -64,7 +71,7 @@ def register(request):
             password = serializer.validated_data['password'],
             first_name = serializer.validated_data['first_name']
         )
-        send_email_confirmation(serializer.validated_data['email'])
+        send_email_confirmation(serializer.validated_data['email'], True)
         return Response({'message':'Check your email for verification.'}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -81,7 +88,7 @@ def login(request):
 
 
 @api_view(['GET'])
-def registration_email_confirm(request):
+def verify_email(request):
     token = request.GET.get('token')
 
     if not token:
@@ -98,12 +105,43 @@ def registration_email_confirm(request):
             user = serializer.save()
             pending_user.delete()
             tokens = get_tokens_for_user(user)
-            return Response(tokens, status=status.HTTP_201_CREATED)
+
+            redirect_url = f"https://todoappclient.web.app/success?access={tokens['access']}"
+            return redirect(redirect_url)
         return Response({'error': 'Data has not surpassed validation (serializer).'}, status=status.HTTP_400_BAD_REQUEST)
     except jwt.ExpiredSignatureError:
         return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
     except PendingUser.DoesNotExist:
         return Response({'error': 'Pending user does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def reset_password_request(request):
+    email = request.data.get('email')
+    send_email_confirmation(email, False)
+    return Response({'message':'Check your email to reset password.'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def reset_password(request):
+    token = request.GET.get('token')
+
+    if not token:
+        return Response({'error': 'No token provided.'}, status.HTTP_404_NOT_FOUND)
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user = get_object_or_404(User, email=payload['email'])
+        new_password = request.data.get('password')
+
+        if not new_password:
+            return Response({'error': 'Password is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({'success': 'Password successfully reset!'})
+    except jwt.ExpiredSignatureError:
+        return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 
