@@ -102,11 +102,10 @@ def verify_email(request):
             'password':pending_user.password
         })
         if serializer.is_valid():
-            user = serializer.save()
+            serializer.save()
             pending_user.delete()
-            tokens = get_tokens_for_user(user)
 
-            redirect_url = f"https://todoappclient.web.app/success?access={tokens['access']}"
+            redirect_url = f"https://todoappclient.web.app/sign-in"
             return redirect(redirect_url)
         return Response({'error': 'Data has not surpassed validation (serializer).'}, status=status.HTTP_400_BAD_REQUEST)
     except jwt.ExpiredSignatureError:
