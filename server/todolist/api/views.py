@@ -127,7 +127,7 @@ def reset_password_request(request):
         send_email_confirmation(email, False)
         return Response({'message': 'Check your email to reset password.'}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
-        return Response({'error': 'User with email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

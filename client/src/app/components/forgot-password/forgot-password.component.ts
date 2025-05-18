@@ -52,7 +52,8 @@ export class ForgotPasswordComponent {
           this.successMessage = response.message;
         },
         error: (error) => {
-          this.errorMessage = error.error?.message || 'Failed to process password reset request';
+          this.isSubmitting = false;
+          this.errorMessage = error.error?.error || 'Failed to process password reset request';
         },
         complete: () => {
           this.isSubmitting = false;
