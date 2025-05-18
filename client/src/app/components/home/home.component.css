@@ -17,9 +17,20 @@
 }
 
 .blurred {
+  position: relative;
+  min-height: 100%;
   filter: blur(5px);
   pointer-events: none;
   user-select: none;
+}
+
+.blurred::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3); /* Adjust opacity as needed */
+  pointer-events: none;
+  z-index: 1;
 }
 
 .auth-dialog {

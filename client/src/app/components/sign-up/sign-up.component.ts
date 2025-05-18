@@ -56,6 +56,8 @@ export class SignUpComponent {
         if (error.error['error']) {
           console.log(error.error['error']);
           this.errorMessage = error.error['error'];
+        } else if (error.error.email) {
+          this.errorMessage = error.error.email;
         } else {
           console.error('Registration failed:', error);
           this.errorMessage = 'Registration failed.';
