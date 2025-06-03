@@ -68,7 +68,7 @@ This project was developed as student work for the Introduction to Software Engi
 - Vladyslav Kovtun
 - Oleh Kyshko
 - Atai Sultangaziev
-- Mykyta Kravchenko
+- Nikita Kravchenko
 
 ## 📄 License
 
