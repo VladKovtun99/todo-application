@@ -6,3 +6,4 @@ psycopg2-binary>=2.9
 django-cors-headers>=4.0
 dj-database-url>=1.0
 sqlalchemy>=1.4.0
+dotenv==0.9.9

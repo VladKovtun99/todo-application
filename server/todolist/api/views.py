@@ -81,8 +81,6 @@ def register(request):
         return Response({'message':'Check your email for verification.'}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
 @api_view(['POST'])
 def login(request):
     serializer = UserLoginSerializer(data=request.data)
@@ -130,8 +128,6 @@ def reset_password_request(request):
         return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 
-
-
 @api_view(['POST'])
 def reset_password(request):
     token = request.GET.get('token')
@@ -151,10 +147,6 @@ def reset_password(request):
         return Response({'success': 'Password successfully reset!'})
     except jwt.ExpiredSignatureError:
         return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
 
 
 class TodoViewSet(viewsets.ModelViewSet):
