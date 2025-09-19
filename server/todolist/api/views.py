@@ -34,8 +34,8 @@ def get_email_confirmation_token(user_email):
     return token
 
 
-email_todo = os.getenv('EMAIL_TODO')
-password_todo = os.getenv('PASSWORD_TODO')
+email_todo = os.environ.get('EMAIL_TODO')
+password_todo = os.environ.get('PASSWORD_TODO')
 
 def send_email_confirmation(user_email, is_confirmation):
     token = get_email_confirmation_token(user_email)

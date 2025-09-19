@@ -9,14 +9,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(source='first_name', required=True)
     email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
         fields = ('name', 'email', 'password')
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'id': {'read_only': True}
-        }
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
