@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from email.message import EmailMessage
 import jwt
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -15,6 +14,7 @@ from mailjet_rest import Client
 from todolist import settings
 from users.models import PendingUser
 import os
+from dotenv import load_dotenv
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -33,6 +33,7 @@ def get_email_confirmation_token(user_email):
     token = jwt.encode(payload, os.environ.get('SECRET_KEY'), algorithm="HS256")
     return token
 
+load_dotenv()
 
 MAILJET_API_KEY = os.environ.get('MAILJET_API_KEY')
 MAILJET_SECRET_KEY = os.environ.get('MAILJET_SECRET_KEY')
