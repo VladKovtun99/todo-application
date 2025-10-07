@@ -11,7 +11,7 @@ from .serializer import UserRegistrationSerializer, UserLoginSerializer, TodoSer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, action
 from todos.models import Todo
-import smtplib
+from mailjet_rest import Client
 from todolist import settings
 from users.models import PendingUser
 import os
@@ -30,37 +30,54 @@ def get_email_confirmation_token(user_email):
         'email': user_email,
         'exp': datetime.utcnow() + timedelta(hours=1)
     }
-    token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+    token = jwt.encode(payload, os.environ.get('SECRET_KEY'), algorithm="HS256")
     return token
 
 
-email_todo = os.environ.get('EMAIL_TODO')
-password_todo = os.environ.get('PASSWORD_TODO')
+MAILJET_API_KEY = os.environ.get('MAILJET_API_KEY')
+MAILJET_SECRET_KEY = os.environ.get('MAILJET_SECRET_KEY')
+MAILJET_SENDER_EMAIL = os.environ.get('MAILJET_SENDER_EMAIL')
+
+mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_SECRET_KEY), version='v3.1')
+
 
 def send_email_confirmation(user_email, is_confirmation):
     token = get_email_confirmation_token(user_email)
 
-    msg = EmailMessage()
-    msg['From'] = email_todo
-    msg['To'] = user_email
-
     if is_confirmation:
-        confirmation_link = f'https://todo-application-t0kh.onrender.com/api/verify-email/?token={token}'
-        msg['Subject'] = 'Email Confirmation'
-        msg.set_content(f"Use this link to confirm your email: {confirmation_link}")
-    elif not is_confirmation:
-        confirmation_link = f'http://todoappclient.web.app/reset-password/?token={token}'
-        msg['Subject'] = 'Password Reset'
-        msg.set_content(f"Use this link to reset your password: {confirmation_link}")
+        subject = "Email Confirmation"
+        link = f'https://todo-application-t0kh.onrender.com/api/verify-email/?token={token}'
+        text = f"Use this link to confirm your email: {link}"
+    else:
+        subject = "Password Reset"
+        link = f'http://todoappclient.web.app/reset-password/?token={token}'
+        text = f"Use this link to reset your password: {link}"
+
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": MAILJET_SENDER_EMAIL,
+                    "Name": "Todo App"
+                },
+                "To": [
+                    {
+                        "Email": user_email
+                    }
+                ],
+                "Subject": subject,
+                "TextPart": text,
+                "HTMLPart": f"<p>{text}</p>"
+            }
+        ]
+    }
 
     try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as connection:
-            connection.starttls()
-            connection.login(email_todo, password_todo)
-            connection.send_message(msg)
-    except smtplib.SMTPRecipientsRefused:
-        return Response({'error': 'Something went wrong...'}, status=status.HTTP_400_BAD_REQUEST)
-
+        result = mailjet.send.create(data=data)
+        if result.status_code not in (200, 201):
+            return Response({'error': 'Failed to send email.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response({'error': f'Something went wrong: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
