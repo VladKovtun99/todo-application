@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TodoStateService } from '../../services/todo-state.service';
 import { TodoModel } from '../../models/todo.model';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
+import {Subscription} from 'rxjs';
 
 interface CalendarDay {
   date: Date;
@@ -25,35 +26,34 @@ interface CalendarDay {
     MatCardSubtitle
   ]
 })
-export class TodoCalendarComponent implements OnInit {
+export class TodoCalendarComponent implements OnInit, OnDestroy {
   calendarDays: CalendarDay[] = [];
   weekDays: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   currentMonth: Date = new Date();
   monthYearStr: string = '';
+  private subscriptions = new Subscription();
 
   constructor(private todoService: TodoStateService) {}
 
   ngOnInit(): void {
     this.todoService.loadTodosIfEmpty();
-    this.generateCalendarDays();
+    this.generateCalendarStructure();
     this.updateMonthYearStr();
-
-    this.todoService.todos$.subscribe(() => {
-      this.generateCalendarDays();
-    });
+    this.subscriptions.add(
+      this.todoService.todos$.subscribe(todos => {
+        this.populateCalendarWithTodos(todos);
+      })
+    );
   }
 
   updateMonthYearStr(): void {
     this.monthYearStr = this.currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
   }
 
-  generateCalendarDays(): void {
+  private generateCalendarStructure(): void {
     const firstDayOfMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1);
-    const lastDayOfMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0);
-
     const startingDayOfWeek = firstDayOfMonth.getDay();
 
-    // Get the first day to display (might be from previous month)
     const firstDay = new Date(firstDayOfMonth);
     firstDay.setDate(firstDay.getDate() - startingDayOfWeek);
 
@@ -62,7 +62,6 @@ export class TodoCalendarComponent implements OnInit {
 
     this.calendarDays = [];
 
-    // Generate days for the calendar (42 days to cover all possible month layouts)
     for (let i = 0; i < 42; i++) {
       const currentDate = new Date(firstDay);
       currentDate.setDate(currentDate.getDate() + i);
@@ -77,31 +76,30 @@ export class TodoCalendarComponent implements OnInit {
         todos: []
       });
     }
+  }
 
-    // Assign todos to calendar days
-    this.todoService.todos$.subscribe(todos => {
-      // Reset todos on all days
-      this.calendarDays.forEach(day => {
-        day.todos = [];
-      });
+  private populateCalendarWithTodos(todos: TodoModel[]): void {
+    this.generateCalendarStructure();
 
-      // Assign todos to days
-      todos.forEach(todo => {
-        if (todo.deadline) {
-          const deadlineDate = new Date(todo.deadline);
-          deadlineDate.setHours(0, 0, 0, 0);
+    this.calendarDays.forEach(day => {
+      day.todos = [];
+    });
 
-          const dayIndex = this.calendarDays.findIndex(day =>
-            day.date.getFullYear() === deadlineDate.getFullYear() &&
-            day.date.getMonth() === deadlineDate.getMonth() &&
-            day.date.getDate() === deadlineDate.getDate()
-          );
+    todos.forEach(todo => {
+      if (todo.deadline) {
+        const deadlineDate = new Date(todo.deadline);
+        deadlineDate.setHours(0, 0, 0, 0);
 
-          if (dayIndex !== -1) {
-            this.calendarDays[dayIndex].todos.push(todo);
-          }
+        const dayIndex = this.calendarDays.findIndex(day =>
+          day.date.getFullYear() === deadlineDate.getFullYear() &&
+          day.date.getMonth() === deadlineDate.getMonth() &&
+          day.date.getDate() === deadlineDate.getDate()
+        );
+
+        if (dayIndex !== -1) {
+          this.calendarDays[dayIndex].todos.push(todo);
         }
-      });
+      }
     });
   }
 
@@ -112,5 +110,9 @@ export class TodoCalendarComponent implements OnInit {
       case 3: return 'todo-completed';
       default: return '';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

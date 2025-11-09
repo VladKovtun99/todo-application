@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {TodoModel} from '../../models/todo.model';
 import {CommonModule} from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
@@ -10,6 +10,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {TodoDialogComponent} from '../todo-dialog/todo-dialog.component';
 import {TodoCardComponent} from '../todo-card/todo-card.component';
 import {AuthService} from '../../services/auth.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -25,10 +26,11 @@ import {AuthService} from '../../services/auth.service';
   standalone: true,
   styleUrl: './todo-list.component.css'
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent implements OnInit, OnDestroy {
   todos: TodoModel[] = [];
   todoService = inject(TodoStateService);
   authService = inject(AuthService);
+  private subscriptions = new Subscription();
 
   constructor(private dialog: MatDialog) {
   }
@@ -39,10 +41,12 @@ export class TodoListComponent implements OnInit {
     }
 
     this.todoService.loadTodosIfEmpty();
-    this.todoService.todos$.subscribe(todos => {
-      this.todos = todos;
-      console.log(JSON.stringify(todos));
-    });
+    this.subscriptions.add(
+      this.todoService.todos$.subscribe(todos => {
+        this.todos = todos;
+        console.log(JSON.stringify(todos));
+      })
+    );
 
   }
 
@@ -56,5 +60,9 @@ export class TodoListComponent implements OnInit {
 
   clear(): void {
     this.todoService.clearTodos();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }
