@@ -1,17 +1,18 @@
 import { inject, Injectable } from '@angular/core';
 import { RegisterDto } from '../models/register.dto';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { LoggedInUserDto } from '../models/logged-in-user.dto';
 import {LoginDto} from '../models/login.dto';
+import { AppConfigService } from './app-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   http = inject(HttpClient);
+  configService = inject(AppConfigService);
 
   private currentUserSubject = new BehaviorSubject<LoggedInUserDto | null>(null);
   public currentUser$: Observable<LoggedInUserDto | null> = this.currentUserSubject.asObservable();
@@ -48,7 +49,7 @@ export class AuthService {
 
   register(registerDto: RegisterDto): Observable<any> {
     console.log(JSON.stringify(registerDto));
-    return this.http.post<any>(environment.apiUrl + '/register/', registerDto, {
+    return this.http.post<any>(this.configService.apiUrl + '/register/', registerDto, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
@@ -57,7 +58,7 @@ export class AuthService {
 
   login(loginDto: LoginDto): Observable<any> {
     console.log(JSON.stringify(loginDto));
-    return this.http.post<any>(environment.apiUrl + '/login/', loginDto, {
+    return this.http.post<any>(this.configService.apiUrl + '/login/', loginDto, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
@@ -86,14 +87,14 @@ export class AuthService {
 
   forgotPassword(email: string): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
-      `${environment.apiUrl}/reset-password-request/`,
+      `${this.configService.apiUrl}/reset-password-request/`,
       { email }
     );
   }
 
   resetPassword(token: string, password: string): Observable<{ success: string }> {
     return this.http.post<{ success: string }>(
-      `${environment.apiUrl}/reset-password/`,
+      `${this.configService.apiUrl}/reset-password/`,
       { password },
       {
         params: { token }

@@ -1,7 +1,7 @@
 // src/app/services/google-calendar.service.ts
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { Injectable, inject } from '@angular/core';
 import { GoogleEventDetails, GoogleApiResponse } from '../models/google-calendar.model';
+import { AppConfigService } from './app-config.service';
 
 declare var gapi: any;
 declare var google: any;
@@ -13,6 +13,7 @@ export class GoogleCalendarService {
   private tokenClient: any;
   private gapiInitialized = false;
   private gisInitialized = false;
+  private configService = inject(AppConfigService);
 
   constructor() {
     // Load the Google API scripts in the constructor
@@ -52,9 +53,10 @@ export class GoogleCalendarService {
    */
   private async initializeGapiClient(): Promise<void> {
     try {
+      const googleConfig = this.configService.googleApi;
       await gapi.client.init({
-        apiKey: environment.googleApi.apiKey,
-        discoveryDocs: [environment.googleApi.discoveryDoc],
+        apiKey: googleConfig.apiKey,
+        discoveryDocs: [googleConfig.discoveryDoc],
       });
       this.gapiInitialized = true;
       console.log('Google API client initialized');
@@ -67,9 +69,10 @@ export class GoogleCalendarService {
    * Initialize GIS when loaded
    */
   private onGisLoaded(): void {
+    const googleConfig = this.configService.googleApi;
     this.tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: environment.googleApi.clientId,
-      scope: environment.googleApi.scopes,
+      client_id: googleConfig.clientId,
+      scope: googleConfig.scopes,
       callback: '', // Will be set when needed
     });
     this.gisInitialized = true;

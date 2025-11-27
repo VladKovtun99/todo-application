@@ -2,16 +2,15 @@ import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {TodoModel} from '../models/todo.model';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
-
-const STORAGE_KEY = 'todos';
+import {AppConfigService} from './app-config.service';
 
 @Injectable({providedIn: 'root'})
 export class TodoStateService {
   private todoSubject = new BehaviorSubject<TodoModel[]>([]);
   todos$ = this.todoSubject.asObservable();
   http = inject(HttpClient);
-  todosUrl = environment.apiUrl + '/todos/';
+  configService = inject(AppConfigService);
+  todosUrl = this.configService.apiUrl + '/todos/';
 
   loadTodosIfEmpty(): void {
     if (this.todoSubject.value.length === 0) {
@@ -45,7 +44,7 @@ export class TodoStateService {
   }
 
   clearTodos() {
-    this.http.delete<TodoModel[]>(`${this.todosUrl}`).subscribe(res => {
+    this.http.delete<TodoModel[]>(`${this.todosUrl}`).subscribe(() => {
       const updated: TodoModel[] = []
       this.todoSubject.next(updated)
     })
