@@ -7,6 +7,20 @@
   margin: 1rem auto;
 }
 
+.month-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.month-year {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
 .calendar-grid {
   display: flex;
   flex-direction: column;

@@ -1,7 +1,15 @@
 <mat-card class="calendar-card mat-elevation-z2">
   <mat-card-header>
     <mat-card-title class="mb-3">Calendar</mat-card-title>
-    <mat-card-subtitle class="mb-3">{{ monthYearStr }}</mat-card-subtitle>
+    <div class="month-navigation">
+      <button mat-icon-button (click)="previousMonth()" aria-label="Previous month">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="month-year">{{ monthYearStr }}</span>
+      <button mat-icon-button (click)="nextMonth()" aria-label="Next month">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
   </mat-card-header>
 
   <mat-card-content>

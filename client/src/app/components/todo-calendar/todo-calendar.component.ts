@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TodoStateService } from '../../services/todo-state.service';
 import { TodoModel } from '../../models/todo.model';
 import {MatTooltip} from '@angular/material/tooltip';
-import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
+import {MatIconButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
 import {Subscription} from 'rxjs';
 
 interface CalendarDay {
@@ -23,7 +25,8 @@ interface CalendarDay {
     MatCardHeader,
     MatCardContent,
     MatCardTitle,
-    MatCardSubtitle
+    MatIconButton,
+    MatIcon
   ]
 })
 export class TodoCalendarComponent implements OnInit, OnDestroy {
@@ -32,6 +35,7 @@ export class TodoCalendarComponent implements OnInit, OnDestroy {
   currentMonth: Date = new Date();
   monthYearStr: string = '';
   private subscriptions = new Subscription();
+  private todos: TodoModel[] = [];
 
   constructor(private todoService: TodoStateService) {}
 
@@ -41,6 +45,7 @@ export class TodoCalendarComponent implements OnInit, OnDestroy {
     this.updateMonthYearStr();
     this.subscriptions.add(
       this.todoService.todos$.subscribe(todos => {
+        this.todos = todos;
         this.populateCalendarWithTodos(todos);
       })
     );
@@ -110,6 +115,18 @@ export class TodoCalendarComponent implements OnInit, OnDestroy {
       case 3: return 'todo-completed';
       default: return '';
     }
+  }
+
+  previousMonth(): void {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
+    this.updateMonthYearStr();
+    this.populateCalendarWithTodos(this.todos);
+  }
+
+  nextMonth(): void {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
+    this.updateMonthYearStr();
+    this.populateCalendarWithTodos(this.todos);
   }
 
   ngOnDestroy(): void {
