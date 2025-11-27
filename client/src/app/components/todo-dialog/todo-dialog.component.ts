@@ -69,7 +69,7 @@ export class TodoDialogComponent {
       const updatedTodo = {
         id: this.data.id,
         title: this.todoForm.controls['title'].value || '',
-        description: this.todoForm.controls['description'].value || '',
+        description: this.todoForm.controls['description'].value || 'No description provided',
         status: this.data.status,
         deadline: deadlineDate
       };
@@ -79,7 +79,7 @@ export class TodoDialogComponent {
       const newTodo: TodoModel = {
         id: null,
         title: this.todoForm.controls['title'].value || '',
-        description: this.todoForm.controls['description'].value || '',
+        description: this.todoForm.controls['description'].value || 'No description provided',
         status: StatusesEnum.NotStarted,
         deadline: deadlineDate
       };
