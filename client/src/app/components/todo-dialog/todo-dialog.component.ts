@@ -1,4 +1,4 @@
-import {Component, inject, Inject, Input} from '@angular/core';
+import {Component, inject, Inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
@@ -10,7 +10,6 @@ import {TodoModel} from '../../models/todo.model';
 import {StatusesEnum} from '../../enums/StatusesEnum';
 import {GoogleCalendarService} from '../../services/google-calendar.service';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {ConsoleLogger} from '@angular/compiler-cli';
 import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
@@ -36,7 +35,7 @@ export class TodoDialogComponent {
   isEditMode: boolean;
   todoForm = new FormGroup({
     title: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
+    description: new FormControl(''),
     deadline: new FormControl(new Date()),
     addToCalendar: new FormControl(false)
   });
